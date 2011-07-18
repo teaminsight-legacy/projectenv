@@ -5,11 +5,17 @@ os.environ['PROJECTENV_HOME'] = os.path.join(os.getcwd(), '..')
 # they just won't work and it could have unintended side effects like files and
 # directories being created, deleted, and modified.
 import cmdrunner
+
 _run_commands = []
+
 def _run(*args, **kwargs):
-    print 'args: %s' % str(args)
     _run_commands.append(' '.join(args))
+
+def _cp(source, dest):
+    _run_commands.append('cp %s %s' % (source, dest))
+
 cmdrunner.run = _run
+cmdrunner.cp = _cp
 
 def run_commands():
     """
