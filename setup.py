@@ -11,11 +11,11 @@ def files_to_distribute():
     ]
 
 setup(name='projectenv',
-      version='0.0.1',
+      version='0.0.2',
       description='The easiest way to create virtual environments for your python projects',
       author='Jordan Bach',
       author_email='jordanbach@gmail.com',
-      url='https://github.com/teaminsight/ProjectEnv',
+      url='https://github.com/teaminsight/projectenv',
       packages=['projectenv'],
       data_files = files_to_distribute()
 )
