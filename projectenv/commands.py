@@ -35,6 +35,11 @@ def init():
     else:
         run('virtualenv', '--no-site-packages', env_path())
 
+def path():
+    path = os.path.split(os.path.dirname(__file__))[0]
+    print path # output for use in shell scripts
+    return path # for testing
+
 def sync():
     spec = get_spec()
     if 'required_libs' in spec:

@@ -4,8 +4,8 @@ import shutil
 
 from test import run_commands, reset_run_commands
 
-from spec_helpers import read_requirements as reqlist
-import package_manager
+from projectenv.spec_helpers import read_requirements as reqlist
+from projectenv import package_manager
 
 class PackageManagerTestCase(unittest.TestCase):
 

@@ -3,7 +3,7 @@ import os
 import shutil
 from copy import copy
 
-from scriptgen import ScriptGenerator
+from projectenv.scriptgen import ScriptGenerator
 
 class ScriptGeneratorTestCase(unittest.TestCase):
 

@@ -4,7 +4,7 @@ os.environ['PROJECTENV_HOME'] = os.path.join(os.getcwd(), '..')
 # We don't actually want to run any of these commands in our unit tests because
 # they just won't work and it could have unintended side effects like files and
 # directories being created, deleted, and modified.
-import cmdrunner
+from projectenv import cmdrunner
 
 _run_commands = []
 

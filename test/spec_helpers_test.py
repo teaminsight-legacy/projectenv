@@ -2,7 +2,7 @@ import unittest
 import os
 import sys
 
-import spec_helpers
+from projectenv import spec_helpers
 
 class SpecHelpersTestCase(unittest.TestCase):
 

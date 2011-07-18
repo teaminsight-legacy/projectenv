@@ -5,7 +5,7 @@ from copy import copy
 
 from test import run_commands, reset_run_commands
 
-import commands
+from projectenv import commands
 
 class CommandsTestCase(unittest.TestCase):
 
@@ -48,7 +48,13 @@ class CommandsTestCase(unittest.TestCase):
             '_PROJECTENV_foo': None})
 
 
-class InitTestCase(unittest.TestCase):
+class PathCommandTestCase(unittest.TestCase):
+
+    def test_path(self):
+        self.assertEqual(commands.path(), os.path.abspath('.'))
+
+
+class InitCommandTestCase(unittest.TestCase):
 
     project_dir = os.path.join(os.getcwd(), 'test', 'project_test_virtual_env')
     project_env_home = os.path.join(os.getcwd(), 'test')

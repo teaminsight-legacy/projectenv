@@ -1,15 +1,13 @@
 import os
 import sys
 
-projectenv_lib_path = os.path.join(os.getenv('PROJECTENV_HOME'), 'lib')
-sys.path = [projectenv_lib_path] + sys.path # lib dir should be first in path
-
 from logger import log, error, DEBUG
 import commands
 
 COMMANDS = {
     'init': commands.init,
-    'sync': commands.sync
+    'sync': commands.sync,
+    'path': commands.path
 }
 
 def main():

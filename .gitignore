@@ -1,2 +1,5 @@
 *.pyc
 environments/
+build/
+dist/
+projectenv.egg-info/
