@@ -1,0 +1,5 @@
+include README.markdown
+include INSTALL.markdown
+include bin/projectenv.sh
+include bin/projectenv.csh
+include specs/default.py
