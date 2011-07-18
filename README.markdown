@@ -6,7 +6,7 @@ The easiest way to create virtual environments for your python projects.
 Installation
 ------------
 
-See the (INSTALL)[https://github.com/teaminsight/ProjectEnv/blob/master/INSTALL.markdown] file.
+See the [INSTALL](https://github.com/teaminsight/ProjectEnv/blob/master/INSTALL.markdown) file.
 
 Configuring a virtualenv for your project
 -----------------------------------------
