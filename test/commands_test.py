@@ -51,7 +51,7 @@ class CommandsTestCase(unittest.TestCase):
 class PathCommandTestCase(unittest.TestCase):
 
     def test_path(self):
-        self.assertEqual(commands.path(), os.path.abspath('.'))
+        self.assertEqual(commands.path(), os.path.abspath('./projectenv'))
 
 
 class InitCommandTestCase(unittest.TestCase):

@@ -67,7 +67,7 @@ __projectenv__python:
     setenv PYTHONPATH $PROJECTENV_PATH
   endif
 
-  python $PROJECTENV_PATH/projectenv $*
+  python $PROJECTENV_PATH $*
 
   if ($?PROJECTENV_OLD_PYTHONPATH) then
     setenv PYTHONPATH $PROJECTENV_OLD_PYTHONPATH

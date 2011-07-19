@@ -31,7 +31,7 @@ __projectenv__off() {
 __projectenv__python() {
     export _PROJECTENV_OLD_PYTHONPATH=$PYTHONPATH
     export PYTHONPATH=$PROJECTENV_PATH:$PYTHONPATH
-    python $PROJECTENV_PATH/projectenv $*
+    python $PROJECTENV_PATH $*
     export PYTHONPATH=$_PROJECTENV_OLD_PYTHONPATH
     unset _PROJECTENV_OLD_PYTHONPATH
 }

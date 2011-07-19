@@ -36,7 +36,7 @@ def init():
         run('virtualenv', '--no-site-packages', env_path())
 
 def path():
-    path = os.path.split(os.path.dirname(__file__))[0]
+    path = os.path.dirname(__file__)
     print path # output for use in shell scripts
     return path # for testing
 
