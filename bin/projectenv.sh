@@ -1,6 +1,7 @@
 #!/bin/sh
 
 __projectenv__sync() {
+    __projectenv__off
     source $PROJECTENV_HOME/environments/$env_name/bin/activate
     __projectenv__python $*
 
@@ -13,16 +14,17 @@ __projectenv__sync() {
 }
 
 __projectenv__on() {
-    if [ $VIRTUAL_ENV ]; then
-        __projectenv__off
-    fi
+    __projectenv__off
     source $PROJECTENV_HOME/environments/$env_name/bin/activate
     source $VIRTUAL_ENV/bin/post_activate.sh
 }
 
 __projectenv__off() {
     if [ $VIRTUAL_ENV ]; then
-        source $VIRTUAL_ENV/bin/pre_deactivate.sh
+        pre_deactivate=$VIRTUAL_ENV/bin/pre_deactivate.sh
+        if [ -e $pre_deactivate ]; then
+          source $pre_deactivate
+        fi
         deactivate
     fi
 }

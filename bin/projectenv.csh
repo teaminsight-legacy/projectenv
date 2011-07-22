@@ -8,9 +8,9 @@ else
 endif
 
 if ($1 == 'sync') then
-  goto __projectenv__sync # I know, I know, but... csh does not have functions!
+  goto __projectenv__pre_sync # I know, I know, but... csh does not have functions!
 else if ($1 == 'on') then
-  goto __projectenv__on
+  goto __projectenv__pre_on
 else if ($1 == 'off') then
   goto __projectenv__off
 else if ($#argv > 0) then
@@ -21,6 +21,10 @@ endif
 # skip pseudo-functions
 ##
 goto done
+
+__projectenv__pre_sync:
+  set return_to = __projectenv__sync
+  goto __projectenv__off
 
 __projectenv__sync:
   set env_name = `pwd | grep -o -E '[^/]+$'`
@@ -37,12 +41,11 @@ __projectenv__post_sync:
   endif
   goto done
 
-__projectenv__on:
-  if ($?VIRTUAL_ENV) then
-    set return_to = __projectenv__on
-    goto __projectenv__off
-  endif
+__projectenv__pre_on:
+  set return_to = __projectenv__on
+  goto __projectenv__off
 
+__projectenv__on:
   set env_name = `pwd | grep -o -E '[^/]+$'`
   source "$PROJECTENV_HOME/environments/$env_name/bin/activate.csh"
   source $VIRTUAL_ENV/bin/post_activate.csh
@@ -50,7 +53,10 @@ __projectenv__on:
 
 __projectenv__off:
   if ($?VIRTUAL_ENV) then
-    source $VIRTUAL_ENV/bin/pre_deactivate.csh
+    set pre_deactivate = "$VIRTUAL_ENV/bin/pre_deactivate.csh"
+    if (-e $pre_deactivate) then
+      source $pre_deactivate
+    endif
     deactivate
   endif
 
