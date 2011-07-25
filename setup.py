@@ -11,7 +11,7 @@ def files_to_distribute():
     ]
 
 setup(name='projectenv',
-      version='0.0.6',
+      version='0.0.7',
       description='The easiest way to create virtual environments for your python projects',
       author='Jordan Bach',
       author_email='jordanbach@gmail.com',
