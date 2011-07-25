@@ -1,5 +1,6 @@
 import os
 import re
+import pkg_resources
 
 from logger import log, error, DEBUG
 from cmdrunner import add_checkpoint, run, cd, cp, rm, mkdir
@@ -12,14 +13,32 @@ def install_libs(required_libs):
             install_lib(lib_spec[0], lib_spec[1])
 
 def install_lib(lib_name, options={}):
-    log('-')
-    log('installing', lib_name)
-    if 'install_with' in options:
-        custom_install(lib_name, options)
+    if already_installed(lib_name):
+        log('-')
+        log('install',
+            "'%s' and all dependencies are already installed" % lib_name)
     else:
-        pip_install(lib_name, options)
-    post_install(lib_name, options)
-    log('installation complete')
+        log('-')
+        log('installing', lib_name)
+        if 'install_with' in options:
+            custom_install(lib_name, options)
+        else:
+            pip_install(lib_name, options)
+        post_install(lib_name, options)
+        log('installation complete')
+
+def already_installed(lib_spec, working_set=pkg_resources.working_set):
+    """
+    returns True if a package matching the given requirement is already
+    installed and all the dependencies are already installed
+
+    """
+    try:
+        working_set.require(lib_spec)
+    except pkg_resources.ResolutionError:
+        return False
+    else:
+        return True
 
 def pip_install(lib_name, options):
     virtual_env = os.getenv('VIRTUAL_ENV')

@@ -1,7 +1,9 @@
 import unittest
 import os
 import shutil
+import pkg_resources
 
+from nose.plugins.skip import SkipTest
 from test import run_commands, reset_run_commands
 
 from projectenv.spec_helpers import read_requirements as reqlist
@@ -74,3 +76,31 @@ class PackageManagerTestCase(unittest.TestCase):
             'pip install -r %s' % self.req_path,
             'cp foo bar'
         ])
+
+class AlreadyInstalledTestCase(unittest.TestCase):
+
+    def setUp(self):
+        reset_run_commands()
+        ws = pkg_resources.WorkingSet([])
+        dist = pkg_resources.Distribution.from_filename('.')
+        ws.add(dist)
+        self.working_set = ws
+
+    def test_package_not_installed(self):
+        self.assertEqual(False,
+                package_manager.already_installed('foo', self.working_set))
+
+    def test_package_installed(self):
+        self.assertTrue(package_manager.already_installed('projectenv',
+            self.working_set))
+
+    def test_local_packages(self):
+        self.assertTrue(package_manager.already_installed('projectenv'))
+
+    def test_bad_requirement(self):
+        self.assertRaises(ValueError, package_manager.already_installed,
+                'foo/bar', self.working_set)
+
+    def test_skip_install(self):
+        package_manager.install_lib('projectenv')
+        self.assertEqual(run_commands(), [])
