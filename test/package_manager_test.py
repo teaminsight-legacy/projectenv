@@ -15,11 +15,14 @@ class PackageManagerTestCase(unittest.TestCase):
     req_path = os.path.join(test_env, 'install-requirements.txt')
 
     def setUp(self):
+        self.old_home = os.getenv('HOME')
+        os.environ['HOME'] = os.path.abspath('.')
         reset_run_commands()
         os.environ['VIRTUAL_ENV'] = self.test_env
         os.mkdir(os.getenv('VIRTUAL_ENV'))
 
     def tearDown(self):
+        os.environ['HOME'] = self.old_home
         shutil.rmtree(os.getenv('VIRTUAL_ENV'))
 
     def test_string_req(self):
@@ -104,3 +107,70 @@ class AlreadyInstalledTestCase(unittest.TestCase):
     def test_skip_install(self):
         package_manager.install_lib('projectenv')
         self.assertEqual(run_commands(), [])
+
+
+class PypircTestCase(unittest.TestCase):
+
+    test_env = os.path.join(os.getcwd(), 'test', 'projectenv_test_virtual_env')
+    req_path = os.path.join(test_env, 'install-requirements.txt')
+
+    def setUp(self):
+        reset_run_commands()
+        self.old_home = os.getenv('HOME')
+        os.environ['HOME'] = os.path.abspath('test/fixtures')
+        os.environ['VIRTUAL_ENV'] = self.test_env
+        os.mkdir(os.getenv('VIRTUAL_ENV'))
+
+    def tearDown(self):
+        os.environ['HOME'] = self.old_home
+        shutil.rmtree(os.getenv('VIRTUAL_ENV'))
+
+    def test_missing_pypirc(self):
+        """should return an empty list if .pypirc is missing"""
+        self.assertEqual(
+                package_manager.extra_pypi_index_servers('does not exist'),
+                [])
+
+
+    def test_no_extra_pypi_servers(self):
+        """
+        should return empty list when no additional pypi servers are
+        specified in .pypirc
+
+        """
+        pypirc = 'test/fixtures/pypirc-default.txt'
+        self.assertEqual(package_manager.extra_pypi_index_servers(pypirc), [])
+
+    def test_extra_pypi_servers(self):
+        """
+        should return a list of URLs for any additional python servers
+        specified in .pypirc
+
+        """
+        pypirc = 'test/fixtures/pypirc-extra.txt'
+        self.assertEqual(package_manager.extra_pypi_index_servers(pypirc), [
+            'http://localhost:8000/simple',
+            'http://pypi.internal.com/simple'
+        ])
+
+    def test_extra_pypi_servers_with_no_arg(self):
+        """should use $HOME/.pypirc when no arg is given"""
+        self.assertEqual(package_manager.extra_pypi_index_servers(), [
+            'http://localhost:8000/simple',
+            'http://pypi.internal.com/simple'
+        ])
+
+    def test_pip_install_with_extra_pypi_servers(self):
+        """
+        should include --extra-index-url options when additional pypi servers
+        are specified in .pypirc
+
+        """
+        package_manager.install_lib('foo')
+        self.assertEqual(run_commands(), [
+            'pip install -r %s --extra-index-url=%s --extra-index-url=%s' % (
+                self.req_path,
+                'http://localhost:8000/simple',
+                'http://pypi.internal.com/simple'
+            )
+        ])

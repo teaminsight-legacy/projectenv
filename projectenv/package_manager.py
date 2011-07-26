@@ -1,6 +1,8 @@
 import os
 import re
 import pkg_resources
+from ConfigParser import ConfigParser
+from urlparse import urljoin
 
 from logger import log, error, DEBUG
 from cmdrunner import add_checkpoint, run, cd, cp, rm, mkdir
@@ -45,7 +47,18 @@ def pip_install(lib_name, options):
     requirement = pip_requirement(lib_name, options)
     req_file = os.path.join(virtual_env, 'install-requirements.txt')
     write_requirement(requirement, req_file)
-    run('pip', 'install', '-r', req_file)
+    extra_repos = ['--extra-index-url=' + repo_url
+                   for repo_url in extra_pypi_index_servers()]
+    run('pip', 'install', '-r', req_file, *extra_repos)
+
+def extra_pypi_index_servers(pypirc_path=None):
+    config = ConfigParser()
+    if not pypirc_path:
+        pypirc_path = os.path.join(os.getenv('HOME', ''), '.pypirc')
+    config.read(pypirc_path)
+    return [urljoin(config.get(section, 'repository'), 'simple')
+            for section in config.sections()
+            if 'repository' in dict(config.items(section))]
 
 def custom_install(lib_name, options):
     install_cmd = options['install_with']
