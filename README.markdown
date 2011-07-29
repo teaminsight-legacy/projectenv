@@ -100,19 +100,19 @@ or commit with the `ref` option. Also, if you have a `requirements.txt`
 file for your project, you can include those automatically by calling
 the `read_requirements()` function.
 
-### predefined values
+### Predefined values
 
 The following variables are available for you to use in your
 `environment.py` file:
 
-**VIRTUAL_ENV** - The path to your project's virtual environment.
+VIRTUAL_ENV - The path to your project's virtual environment.
 
-**PROJECTENV_HOME** - ~/.projectenv
+PROJECTENV_HOME - ~/.projectenv
 
-**SITE_PACKAGES** - The path to your project's virtual site-packages
+SITE_PACKAGES - The path to your project's virtual site-packages
 directory.
 
-### helper functions
+### Helper functions
 
 The following helper functions are available for you to use in your
 `environment.py` file.
@@ -137,7 +137,7 @@ If you have packages hosted on a local or internal pypi server, and you
 have configured your `~/.pypirc` file to include those servers, projectenv
 will automatically detect those servers and install packages from them.
 For example, if you had the following `~/.pypirc` file, projectenv will
-attempt to install packages from http://pypi.internal.com:6789:
+attempt to install packages from pypi.internal.com:6789:
 
 ```
 [distutils]
