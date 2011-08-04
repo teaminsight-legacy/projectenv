@@ -50,6 +50,8 @@ def path():
     return path # for testing
 
 def sync():
+    init() # ensure environment.py and virtualenv exist
+
     spec = get_spec()
     log('-')
     generate_post_activate_script(spec)
