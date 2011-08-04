@@ -4,17 +4,20 @@ Installation instructions
 Install virtualenv
 ---------------------
 
-projectenv depends on virtualenv, so make sure you have virtualenv installed.
+projectenv requires virtualenv and pip, so make sure you have virtualenv installed.
 
     $ easy_install virtualenv
+    $ easy_install pip
+
+_Depending on how your system is setup, you may need to use `sudo` to install these
+packages. Once pip is installed you won't need to use sudo anymore._
 
 Install projectenv
 ----------------------------
 
     $ pip install projectenv
 
-_pip comes with virtualenv and is the preferred package manager to use
-with virtualenv_
+_Using pip is the only supported way to install projectenv._
 
 Edit your shell's configuration file
 ---------------------------------------
