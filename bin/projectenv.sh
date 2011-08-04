@@ -6,7 +6,6 @@ __projectenv__sync() {
     __projectenv__off
     __projectenv__python $*
 
-    echo "python exited with status: $__last_exit_status"
     if [ $__last_exit_status == 0 ]; then
         __projectenv__on
     fi
