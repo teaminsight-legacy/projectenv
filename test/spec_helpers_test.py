@@ -22,6 +22,10 @@ class SpecHelpersTestCase(unittest.TestCase):
         self.assertEqual(spec_helpers.read_requirements(), requirements)
         os.remove('requirements.txt')
 
+    def test_read_missing_requirements(self):
+        """should return an emtpy list when requirements.txt is missing"""
+        self.assertEqual(spec_helpers.read_requirements(), [])
+
     def test_install_src_dir(self):
         """
         should return the path where a pip install checks out its git repos

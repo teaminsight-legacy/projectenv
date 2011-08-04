@@ -6,5 +6,5 @@ environment_vars = {
 }
 
 # List the python packages to install for your project's virtualenv.
-required_libs = [
+required_libs = read_requirements() + [
 ]

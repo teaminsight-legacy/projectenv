@@ -8,14 +8,15 @@ import sys
 
 def read_requirements(path='requirements.txt'):
     """returns a list of entries in the requirements.txt file"""
-    f = open(path)
     reqs = []
-    try:
-        for line in f:
-            if line.strip():
-                reqs.append(line.strip())
-    finally:
-        f.close()
+
+    if os.path.exists(path):
+        f = open(path)
+        try:
+            [reqs.append(line.strip()) for line in f if line.strip()]
+        finally:
+            f.close()
+
     return reqs
 
 def install_src_dir(*rel_path):
