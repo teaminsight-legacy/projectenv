@@ -1,10 +1,13 @@
 #!/bin/sh
 
+__last_exit_status=0
+
 __projectenv__sync() {
     __projectenv__off
     __projectenv__python $*
 
-    if [ $? == 0 ]; then
+    echo "python exited with status: $__last_exit_status"
+    if [ $__last_exit_status == 0 ]; then
         __projectenv__on
     fi
 }
@@ -30,6 +33,7 @@ __projectenv__python() {
     export _PROJECTENV_OLD_PYTHONPATH=$PYTHONPATH
     export PYTHONPATH=$PROJECTENV_PATH:$PYTHONPATH
     python $PROJECTENV_PATH $*
+    __last_exit_status=$?
     export PYTHONPATH=$_PROJECTENV_OLD_PYTHONPATH
     unset _PROJECTENV_OLD_PYTHONPATH
 }

@@ -31,7 +31,7 @@ __projectenv__sync:
   goto __projectenv__python
 
 __projectenv__post_sync:
-  if ($? == 0) then
+  if ($__last_exit_status == 0) then
     goto __projectenv__on
   endif
   goto done
@@ -69,6 +69,7 @@ __projectenv__python:
   endif
 
   python $PROJECTENV_PATH $*
+  set __last_exit_status = $?
 
   if ($?PROJECTENV_OLD_PYTHONPATH) then
     setenv PYTHONPATH $PROJECTENV_OLD_PYTHONPATH
