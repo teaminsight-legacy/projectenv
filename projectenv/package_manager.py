@@ -16,7 +16,7 @@ def install_libs(required_libs):
             install_lib(lib_spec[0], lib_spec[1])
 
 def install_lib(lib_name, options={}):
-    if already_installed(lib_name):
+    if already_installed(lib_name, options):
         log('-')
         log('install',
             "'%s' and all dependencies are already installed" % lib_name)
@@ -30,12 +30,18 @@ def install_lib(lib_name, options={}):
         post_install(lib_name, options)
         log('installation complete')
 
-def already_installed(lib_spec, working_set=None):
+def already_installed(lib_spec, options, working_set=None):
     """
     returns True if a package matching the given requirement is already
-    installed and all the dependencies are already installed
+    installed and all the dependencies are already installed. If
+    options['path'] is present, already_installed() returns False. This allows
+    local copies of a library to shadow installed versions while they are being
+    developed.
 
     """
+    if 'path' in options:
+        return False
+
     if not working_set:
         working_set=pkg_resources.WorkingSet(sys.path)
 
@@ -76,7 +82,10 @@ def post_install(lib_name, options):
             run(*cmd)
 
 def pip_requirement(lib_name, options):
-    if 'git' in options:
+    if 'path' in options:
+        lib_name = lib_name_without_version(lib_name)
+        req = '-e %s' % options['path']
+    elif 'git' in options:
         lib_name = lib_name_without_version(lib_name)
         ref = ('@' + options['ref']) if 'ref' in options else ''
         req = '-e git+%s%s#egg=%s' % (options['git'], ref, lib_name)

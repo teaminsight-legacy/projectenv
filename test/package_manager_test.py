@@ -67,6 +67,18 @@ class PackageManagerTestCase(unittest.TestCase):
             self.test_env, self.req_path)])
         self.assertEqual(os.getcwd(), cwd) # ensure we're back where we started
 
+    def test_path_req(self):
+        cwd = os.getcwd()
+        lib_path = os.path.join(self.test_env, 'foo', 'bar')
+        os.makedirs(lib_path)
+        package_manager.install_lib('bar', {'path': lib_path})
+        self.assertTrue(os.path.exists(self.req_path))
+        self.assertEqual(reqlist(self.req_path), [
+            '-e %s' % lib_path
+        ])
+        self.assertEqual(run_commands(), ['pip install -E %s -r %s' % (
+            self.test_env, self.req_path)])
+
     def test_custom_req(self):
         package_manager.install_lib('foo', {
             'install_with': 'easy_install'
@@ -94,23 +106,27 @@ class AlreadyInstalledTestCase(unittest.TestCase):
         self.working_set = ws
 
     def test_package_not_installed(self):
-        self.assertEqual(False,
-                package_manager.already_installed('foo', self.working_set))
+        self.assertEqual(False, package_manager.already_installed('foo', {},
+                    self.working_set))
 
     def test_package_installed(self):
-        self.assertTrue(package_manager.already_installed('projectenv',
+        self.assertTrue(package_manager.already_installed('projectenv', {},
             self.working_set))
 
     def test_local_packages(self):
-        self.assertTrue(package_manager.already_installed('projectenv'))
+        self.assertTrue(package_manager.already_installed('projectenv', {}))
 
     def test_bad_requirement(self):
         self.assertRaises(ValueError, package_manager.already_installed,
-                'foo/bar', self.working_set)
+                'foo/bar', {}, self.working_set)
 
     def test_skip_install(self):
-        package_manager.install_lib('projectenv')
+        package_manager.install_lib('projectenv', {})
         self.assertEqual(run_commands(), [])
+
+    def test_local_installed(self):
+        self.assertEqual(package_manager.already_installed('projectenv',
+                {'path': 'foo'}, self.working_set), False)
 
 
 class PypircTestCase(unittest.TestCase):
