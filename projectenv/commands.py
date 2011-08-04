@@ -1,4 +1,6 @@
+import sys
 import os
+
 from logger import log, error, DEBUG
 from cmdrunner import add_checkpoint, run, cd, cp, rm, mkdir
 from package_manager import install_libs
@@ -16,6 +18,13 @@ def env_name():
 
 def env_path():
     return os.path.join(home_dir(), 'environments', env_name())
+
+def activate_env():
+    """Activates the virtualenv from within the current python process"""
+    sys.path = [p for p in sys.path if not 'site-packages' in p]
+    activate_script = os.path.join(env_path(), 'bin', 'activate_this.py')
+    execfile(activate_script, {'__file__': activate_script})
+    os.environ['VIRTUAL_ENV'] = env_path()
 
 def revert_init():
     rm('./environment.py')
@@ -42,15 +51,15 @@ def path():
 
 def sync():
     spec = get_spec()
+    log('-')
+    generate_post_activate_script(spec)
+    log('-')
+    generate_pre_deactivate_script(spec)
+
+    activate_env()
     if 'required_libs' in spec:
         install_libs(spec['required_libs'])
         # TODO: generate_requirements_txt(spec['required_libs'])
-
-    log('-')
-    generate_post_activate_script(spec)
-
-    log('-')
-    generate_pre_deactivate_script(spec)
 
 ##
 # helper methods for the main commands

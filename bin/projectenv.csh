@@ -27,17 +27,12 @@ __projectenv__pre_sync:
   goto __projectenv__off
 
 __projectenv__sync:
-  set env_name = `pwd | grep -o -E '[^/]+$'`
-  source $PROJECTENV_HOME/environments/$env_name/bin/activate.csh
   set return_to = __projectenv__post_sync
   goto __projectenv__python
 
 __projectenv__post_sync:
   if ($? == 0) then
-    deactivate
     goto __projectenv__on
-  else
-    deactivate
   endif
   goto done
 

@@ -1,3 +1,4 @@
+import sys
 import os
 import re
 import pkg_resources
@@ -29,12 +30,15 @@ def install_lib(lib_name, options={}):
         post_install(lib_name, options)
         log('installation complete')
 
-def already_installed(lib_spec, working_set=pkg_resources.working_set):
+def already_installed(lib_spec, working_set=None):
     """
     returns True if a package matching the given requirement is already
     installed and all the dependencies are already installed
 
     """
+    if not working_set:
+        working_set=pkg_resources.WorkingSet(sys.path)
+
     try:
         working_set.require(lib_spec)
     except pkg_resources.ResolutionError:
@@ -49,7 +53,8 @@ def pip_install(lib_name, options):
     write_requirement(requirement, req_file)
     extra_repos = ['--extra-index-url=' + repo_url
                    for repo_url in extra_pypi_index_servers()]
-    run('pip', 'install', '-r', req_file, *extra_repos)
+    run('pip', 'install', '-E', virtual_env, '-r', req_file,
+        *extra_repos)
 
 def extra_pypi_index_servers(pypirc_path=None):
     config = ConfigParser()

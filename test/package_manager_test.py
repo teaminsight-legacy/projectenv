@@ -29,13 +29,15 @@ class PackageManagerTestCase(unittest.TestCase):
         package_manager.install_lib('foo')
         self.assertTrue(os.path.exists(self.req_path))
         self.assertEqual(reqlist(self.req_path), ['foo'])
-        self.assertEqual(run_commands(), ['pip install -r %s' % self.req_path])
+        self.assertEqual(run_commands(), ['pip install -E %s -r %s' % (
+            self.test_env, self.req_path)])
 
     def test_string_req_with_version(self):
         package_manager.install_lib('foo==1.2.3')
         self.assertTrue(os.path.exists(self.req_path))
         self.assertEqual(reqlist(self.req_path), ['foo==1.2.3'])
-        self.assertEqual(run_commands(), ['pip install -r %s' % self.req_path])
+        self.assertEqual(run_commands(), ['pip install -E %s -r %s' % (
+            self.test_env, self.req_path)])
 
 
     def test_git_req(self):
@@ -46,7 +48,8 @@ class PackageManagerTestCase(unittest.TestCase):
         self.assertEqual(reqlist(self.req_path), [
             '-e git+ssh://test.repo/foo#egg=foo'
         ])
-        self.assertEqual(run_commands(), ['pip install -r %s' % self.req_path])
+        self.assertEqual(run_commands(), ['pip install -E %s -r %s' % (
+            self.test_env, self.req_path)])
         self.assertEqual(os.getcwd(), cwd) # ensure we're back where we started
 
     def test_git_req_with_ref(self):
@@ -60,7 +63,8 @@ class PackageManagerTestCase(unittest.TestCase):
         self.assertEqual(reqlist(self.req_path), [
             '-e git+ssh://test.repo/foo@v0.1.4#egg=foo'
         ])
-        self.assertEqual(run_commands(), ['pip install -r %s' % self.req_path])
+        self.assertEqual(run_commands(), ['pip install -E %s -r %s' % (
+            self.test_env, self.req_path)])
         self.assertEqual(os.getcwd(), cwd) # ensure we're back where we started
 
     def test_custom_req(self):
@@ -76,7 +80,7 @@ class PackageManagerTestCase(unittest.TestCase):
         self.assertTrue(os.path.exists(self.req_path))
         self.assertEqual(reqlist(self.req_path), ['foo'])
         self.assertEqual(run_commands(), [
-            'pip install -r %s' % self.req_path,
+            'pip install -E %s -r %s' % (self.test_env, self.req_path),
             'cp foo bar'
         ])
 
@@ -168,7 +172,8 @@ class PypircTestCase(unittest.TestCase):
         """
         package_manager.install_lib('foo')
         self.assertEqual(run_commands(), [
-            'pip install -r %s --extra-index-url=%s --extra-index-url=%s' % (
+            'pip install -E %s -r %s --extra-index-url=%s --extra-index-url=%s' % (
+                self.test_env,
                 self.req_path,
                 'http://localhost:8000/simple',
                 'http://pypi.internal.com/simple'

@@ -2,14 +2,10 @@
 
 __projectenv__sync() {
     __projectenv__off
-    source $PROJECTENV_HOME/environments/$env_name/bin/activate
     __projectenv__python $*
 
-    if [ $? ]; then
-        deactivate
+    if [ $? == 0 ]; then
         __projectenv__on
-    else
-        deactivate
     fi
 }
 
